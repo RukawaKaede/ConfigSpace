@@ -93,6 +93,49 @@ class UtilTest(unittest.TestCase):
 
         return all_neighbors
 
+    def test_get_one_exchange_neighbourhood(self):
+        # test fixed_dims
+        cs = ConfigurationSpace()
+        cs.add_hyperparameter(CategoricalHyperparameter('0', [0, 1], default_value=0))
+        cs.add_hyperparameter(CategoricalHyperparameter('1', [0, 1], default_value=0))
+        cs.add_hyperparameter(CategoricalHyperparameter('2', [0, 1], default_value=0))
+        cs.add_hyperparameter(CategoricalHyperparameter('3', [0, 1], default_value=0))
+        cs.add_hyperparameter(CategoricalHyperparameter('4', [0, 1, 2, 3, 4], default_value=0))
+
+        fixed_dims = {'0': 1, '1': 0, '2': 0, '3': 0}
+
+        conf = cs.sample_configuration(fixed_dims=fixed_dims)
+        neighborhood_iter = get_one_exchange_neighbourhood(conf, seed=0, fixed_dims=fixed_dims)
+
+        tmp = next(neighborhood_iter)
+        self.assertEqual(tmp['0'], fixed_dims['0'])
+        self.assertEqual(tmp['1'], fixed_dims['1'])
+        self.assertEqual(tmp['2'], fixed_dims['2'])
+        self.assertEqual(tmp['3'], fixed_dims['3'])
+
+        tmp = next(neighborhood_iter)
+        self.assertEqual(tmp['0'], fixed_dims['0'])
+        self.assertEqual(tmp['1'], fixed_dims['1'])
+        self.assertEqual(tmp['2'], fixed_dims['2'])
+        self.assertEqual(tmp['3'], fixed_dims['3'])
+
+        tmp = next(neighborhood_iter)
+        self.assertEqual(tmp['0'], fixed_dims['0'])
+        self.assertEqual(tmp['1'], fixed_dims['1'])
+        self.assertEqual(tmp['2'], fixed_dims['2'])
+        self.assertEqual(tmp['3'], fixed_dims['3'])
+
+        tmp = next(neighborhood_iter)
+        self.assertEqual(tmp['0'], fixed_dims['0'])
+        self.assertEqual(tmp['1'], fixed_dims['1'])
+        self.assertEqual(tmp['2'], fixed_dims['2'])
+        self.assertEqual(tmp['3'], fixed_dims['3'])
+
+        # StopIteration 
+        with self.assertRaises(StopIteration):
+            tmp = next(neighborhood_iter)
+
+
     def test_random_neighbor_float(self):
         hp = UniformFloatHyperparameter('a', 1, 10)
         self._test_random_neigbor(hp)

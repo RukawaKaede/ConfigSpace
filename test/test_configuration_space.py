@@ -685,6 +685,34 @@ class TestConfigurationSpace(unittest.TestCase):
                 for j in range(100):
                     self.assertEqual(samples[-1][j], samples[-2][j])
 
+        # test fixed_dims
+        cs = ConfigurationSpace()
+        cs.add_hyperparameter(CategoricalHyperparameter('0', [0, 1], default_value=0))
+        cs.add_hyperparameter(CategoricalHyperparameter('1', [0, 1], default_value=0))
+        cs.add_hyperparameter(CategoricalHyperparameter('2', [0, 1], default_value=0))
+        cs.add_hyperparameter(CategoricalHyperparameter('3', [0, 1], default_value=0))
+        cs.add_hyperparameter(CategoricalHyperparameter('4', [0, 1, 2, 3, 4], default_value=0))
+
+        fixed_dims = {'0': 1, '1': 0, '2': 0, '3': 0}
+        tmp = cs.sample_configuration(fixed_dims=fixed_dims)
+        self.assertEqual(tmp['0'], fixed_dims['0'])
+        self.assertEqual(tmp['1'], fixed_dims['1'])
+        self.assertEqual(tmp['2'], fixed_dims['2'])
+        self.assertEqual(tmp['3'], fixed_dims['3'])
+
+        tmp = cs.sample_configuration(fixed_dims=fixed_dims)
+        self.assertEqual(tmp['0'], fixed_dims['0'])
+        self.assertEqual(tmp['1'], fixed_dims['1'])
+        self.assertEqual(tmp['2'], fixed_dims['2'])
+        self.assertEqual(tmp['3'], fixed_dims['3'])
+
+        tmp = cs.sample_configuration(fixed_dims=fixed_dims)
+        self.assertEqual(tmp['0'], fixed_dims['0'])
+        self.assertEqual(tmp['1'], fixed_dims['1'])
+        self.assertEqual(tmp['2'], fixed_dims['2'])
+        self.assertEqual(tmp['3'], fixed_dims['3'])
+
+
     def test_sample_configuration_with_or_conjunction(self):
         cs = ConfigurationSpace(seed=1)
 

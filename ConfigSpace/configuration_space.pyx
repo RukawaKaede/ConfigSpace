@@ -40,6 +40,7 @@ from ConfigSpace.hyperparameters import (
     Hyperparameter,
     Constant,
     FloatHyperparameter,
+    CategoricalHyperparameter,
 )
 from ConfigSpace.conditions import (
     ConditionComponent,
@@ -1208,7 +1209,7 @@ class ConfigurationSpace(object):
         """ Allows to iterate over the hyperparameter names in (hopefully?) the right order."""
         return iter(self._hyperparameters.keys())
 
-    def sample_configuration(self, size: int = 1) -> Union['Configuration', List['Configuration']]:
+    def sample_configuration(self, size: int = 1, fixed_dims: Union[None, dict] = None) -> Union['Configuration', List['Configuration']]:
         """
         Sample ``size`` configurations from the configuration space object.
 
@@ -1227,6 +1228,19 @@ class ConfigurationSpace(object):
                             % type(size))
         elif size < 1:
             return []
+
+
+        #####add fixed_dims
+        fixed_param_names_v_value = dict()
+        if fixed_dims is not None:
+            for param_name, param_fix_value in fixed_dims.items():
+                param = self.get_hyperparameter(name=param_name)
+                if isinstance(param, CategoricalHyperparameter):
+                    v_value = param.choices.index(param_fix_value)
+                    fixed_param_names_v_value[param_name] = v_value
+                else:
+                    raise TypeError('fixed_dims only support CategoricalHyperparameter')
+        ##################
 
         iteration = 0
         missing = size
@@ -1262,7 +1276,12 @@ class ConfigurationSpace(object):
 
             for i, hp_name in enumerate(self._hyperparameters):
                 hyperparameter = self._hyperparameters[hp_name]
-                vector[:, i] = hyperparameter._sample(self.random, missing)
+                #######add fixed_dims
+                if hp_name in fixed_param_names_v_value:
+                    vector[:, i] = np.array([fixed_param_names_v_value[hp_name] for i in range(vector.shape[0])])
+                else:
+                    vector[:, i] = hyperparameter._sample(self.random, missing)
+                ###################
 
             for i in range(missing):
                 try:

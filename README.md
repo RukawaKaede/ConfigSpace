@@ -1,3 +1,12 @@
+# New feature in this repository
+Add support for "fixed_dims" in "get_one_exchange_neighbourhood" and "sample_configuration" methods.
+
+It allows us to fix partial CategoricalHyperparameter in ConfigurationSpace and sample the remaining hyperparameters.
+
+See test/test_util.py 'test_get_one_exchange_neighbourhood' and test/test_configuration_space.py 'test_sample_configuration',
+
+the code under the comment '# test fixed_dims' shows how to use it.
+
 # ConfigSpace
 
 A simple python module to manage configuration spaces for algorithm configuration

@@ -93,6 +93,7 @@ def impute_inactive_values(configuration: Configuration, strategy: Union[str, fl
 def get_one_exchange_neighbourhood(
         configuration: Configuration,
         seed: int,
+        fixed_dims: Union[None, dict] = None,
         num_neighbors: int = 4,
         stdev: float = 0.2) -> Generator[Configuration]:
     """
@@ -143,6 +144,15 @@ def get_one_exchange_neighbourhood(
 
     finite_neighbors_stack = {}  # type: Dict
     configuration_space = configuration.configuration_space  # type: ConfigSpace
+    ############# add fixed_dims
+    if fixed_dims is not None:
+        # manually set constant value for fixed_dims
+        for k, v in fixed_dims.items():
+            if k in n_neighbors_per_hp:
+                n_neighbors_per_hp[k] = 0
+                finite_neighbors_stack[k] = [v]
+                number_of_usable_hyperparameters -= 1
+    #############
 
     while len(hyperparameters_used) < number_of_usable_hyperparameters:
         index = int(random.randint(hyperparameters_list_length))
