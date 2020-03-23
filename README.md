@@ -3,9 +3,8 @@ Add support for "fixed_dims" in "get_one_exchange_neighbourhood" and "sample_con
 
 It allows us to fix partial CategoricalHyperparameter in ConfigurationSpace and sample the remaining hyperparameters.
 
-See test/test_util.py 'test_get_one_exchange_neighbourhood' and test/test_configuration_space.py 'test_sample_configuration',
-
-the code under the comment '# test fixed_dims' shows how to use it.
+See test/test_util.py ['test_get_one_exchange_neighbourhood'](https://github.com/RukawaKaede/ConfigSpace/blob/4ea0204f493832e3706938c0d11bd680d9b731f6/test/test_util.py#L96) and test/test_configuration_space.py ['test_sample_configuration'](https://github.com/RukawaKaede/ConfigSpace/blob/4ea0204f493832e3706938c0d11bd680d9b731f6/test/test_configuration_space.py#L688),
+the lines under the comment '# test fixed_dims' show how to use it.
 
 # ConfigSpace
 
